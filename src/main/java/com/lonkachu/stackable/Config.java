@@ -1,4 +1,4 @@
-package org.lonkachu.stackableforge;
+package com.lonkachu.stackable;
 
 public class Config {
 

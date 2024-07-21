@@ -1,0 +1,18 @@
+{
+	"required": true,
+	"package": "com.lonkachu.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"DrawContextFixin"
+	],
+	"mixins": [
+		"BundleItemMixin",
+
+		"InventoryStackMixin",
+		"ItemEntityMixin",
+		"ItemStackFixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
