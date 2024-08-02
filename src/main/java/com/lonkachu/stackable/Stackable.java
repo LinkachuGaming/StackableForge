@@ -2,6 +2,7 @@ package com.lonkachu.stackable;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -25,6 +26,7 @@ public class Stackable
     public static final String MODID = "stackable";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
+    public static Logger GetLogger() { return LOGGER; }
     // Create a Deferred Register to hold Blocks which will all be registered under the "stackable" namespace
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     // Create a Deferred Register to hold Items which will all be registered under the "stackable" namespace
@@ -102,7 +104,21 @@ public class Stackable
 
     public void ModifyDefaultComponentsEvent(ModifyDefaultComponentsEvent event)
     {
-        event.modifyMatching(item -> item.getMaxStackSize(item.getDefaultInstance()) == 64, builder -> builder.set(DataComponents.MAX_STACK_SIZE, getMaxStackCount()));
+        try
+        {
+            event.modifyMatching(
+                    item -> !item.isDamageable(item.getDefaultInstance()) && item.getDefaultMaxStackSize() == 64, //Basically, we want to ignore any damagable item, and also ensure the object has the default stack size.
+                    builder -> builder.set(DataComponents.MAX_STACK_SIZE, getMaxStackCount())
+            );
+        } catch (IllegalStateException e){
+            throw new RuntimeException(e);
+        }
+
+    }
+    public boolean test(Item item)
+    {
+        System.out.println(item.getDefaultInstance().getDisplayName().toString());
+        return true;
     }
 
 
