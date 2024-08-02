@@ -133,6 +133,9 @@ dependencies {
         jarJar.ranged(it, "[0.4.0,)")
     }
 
+    // Apply Mixin AP
+    annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
+
     // Example mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
@@ -155,6 +158,7 @@ dependencies {
 mixin
 {
     config 'stackable.mixins.json'
+    add sourceSets.main, "mixins.${mod_id}.refmap.json"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -185,7 +189,8 @@ tasks.named('jar', Jar).configure {
             'Specification-Version'   : '1', // We are version 1 of ourselves
             'Implementation-Title'    : project.name,
             'Implementation-Version'  : project.jar.archiveVersion,
-            'Implementation-Vendor'   : mod_authors
+            'Implementation-Vendor'   : mod_authors,
+            'MixinConfigs': "${mod_id}.mixins.json"
         ])
     }
 }
