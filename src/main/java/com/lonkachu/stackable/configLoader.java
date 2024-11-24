@@ -9,8 +9,8 @@ import java.net.FileNameMap;
 /*
 Auth Lonk: So, this is a pretty basic GSON configuration file java file, it pretty much attempts to read stackable.json, if it doesn't exist it creates stackable and sends it to the call that called this config
  */
-public class configLoader {
-
+public class configLoader
+{
     public static Config bootstrapConfig() throws IOException {
 
         Config config;
@@ -41,12 +41,16 @@ public class configLoader {
         return config;
     }
 
-    private static Config configReader() throws FileNotFoundException {
+    private static Config configReader() throws IOException {
         GsonBuilder b = new GsonBuilder();
         Gson gson = b.create();
         BufferedReader br = new BufferedReader(new FileReader("config/Stackable.json"));
 
         Config c = gson.fromJson(br, Config.class);
+        if (c.GetOverrides() == null)
+        {
+            c = configWriter();
+        }
         return c;
     }
 }

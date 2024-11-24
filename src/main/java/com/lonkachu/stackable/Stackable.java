@@ -2,6 +2,8 @@ package com.lonkachu.stackable;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -31,6 +33,9 @@ public class Stackable
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     // Create a Deferred Register to hold Items which will all be registered under the "stackable" namespace
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+
+    // Create a static config
+    private static Config config;
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "stackable" namespace
 //    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
@@ -55,19 +60,17 @@ public class Stackable
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
 
-    public static final int DEFAULT_MAX_STACK = 127;
+    public static final int DEFAULT_MAX_STACK = 128;
     static int maxStack = -1;
     public static int getMaxStackCount()
     {
         if(maxStack == -1) //if we call getMax before we have initalized everything, read the config
         {
-            Config config;
             try {
                 config = configLoader.bootstrapConfig();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
             maxStack = config.getMaxStackSize();
         }
         return maxStack;
@@ -112,6 +115,12 @@ public class Stackable
             );
         } catch (IllegalStateException e){
             throw new RuntimeException(e);
+        }
+
+        for (StacksizeOverride override : config.GetOverrides())
+        {
+            Item item = BuiltInRegistries.ITEM.get(override.GetIdentifier());
+            event.modify(item, builder -> builder.set(DataComponents.MAX_STACK_SIZE, override.GetCount()));
         }
 
     }
