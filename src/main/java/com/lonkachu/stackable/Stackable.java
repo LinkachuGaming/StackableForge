@@ -59,7 +59,7 @@ public class Stackable
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
-
+    public static final int MAX_STACK = 2147483647;
     public static final int DEFAULT_MAX_STACK = 128;
     static int maxStack = -1;
     public static int getMaxStackCount()

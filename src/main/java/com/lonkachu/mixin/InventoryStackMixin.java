@@ -40,6 +40,6 @@ public interface InventoryStackMixin extends Clearable {
         {
             return constant;
         }
-        return Stackable.getMaxStackCount(); //We ignore the original, we could do a check to ensure it was 64, however, this should always be 64, this is the base case.
+        return Stackable.MAX_STACK; //We ignore the original, we could do a check to ensure it was 64, however, this should always be 64, this is the base case.
     }
 }
